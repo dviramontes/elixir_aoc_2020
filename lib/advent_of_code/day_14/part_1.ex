@@ -19,19 +19,19 @@ defmodule AdventOfCode.Day14.Part1 do
     defstruct mask: nil
 
     @type t(mask) :: %Instruction.Mask{mask: mask}
-    @type t :: %Instruction.Mask{mask: list(String.t())}        
+    @type t :: %Instruction.Mask{mask: list(String.t())}
   end
 
   defmodule Instruction.Mem do
     @typedoc """
     And instruction of type mem.
     """
-    defstruct addr: nil, value: nil 
+    defstruct addr: nil, value: nil
 
     @type t(addr, value) :: %Instruction.Mem{addr: addr, value: value}
-    @type t :: %Instruction.Mem{addr: integer, value: integer}        
+    @type t :: %Instruction.Mem{addr: integer, value: integer}
   end
-                             
+
   defmodule Memory do
     @typedoc """
     A block of memory. And the current mask.
@@ -49,7 +49,7 @@ defmodule AdventOfCode.Day14.Part1 do
   """
   @spec run(String.t()) :: integer
   def run(file_path)
-  
+
   def run(file_path) do
     instructions = file_path |> parse_input()
     final_memory = instructions |> Enum.reduce(%Memory{}, &evaluate/2)
@@ -63,7 +63,7 @@ defmodule AdventOfCode.Day14.Part1 do
   """
   @spec parse_input(String.t()) :: list(Instruction.Mask.t() | Instruction.Mem.t())
   def parse_input(file_path)
-  
+
   def parse_input(file_path) do
     file_path
     |> File.stream!()
@@ -76,7 +76,7 @@ defmodule AdventOfCode.Day14.Part1 do
   """
   @spec parse_line(String.t()) :: Instruction.Mask.t() | Instruction.Mem.t()
   def parse_line(line)
-  
+
   def parse_line("mask = " <> mask_str) do
     mask =
       mask_str
@@ -96,20 +96,20 @@ defmodule AdventOfCode.Day14.Part1 do
   @doc """
   Evaluate an instruction. Return the updated memory. 
   """
-  @spec evaluate(Instruction.Mask.t() | Instruction.Mem.t(), Memory.t()) :: Memory.t() 
+  @spec evaluate(Instruction.Mask.t() | Instruction.Mem.t(), Memory.t()) :: Memory.t()
   def evaluate(instruction, memory)
-  
+
   def evaluate(
-    %Instruction.Mask{} = mask,
-    %Memory{} = memory
-  ) do
+        %Instruction.Mask{} = mask,
+        %Memory{} = memory
+      ) do
     %{memory | mask: mask.mask}
   end
 
   def evaluate(
-    %Instruction.Mem{} = instr_mem,
-    %Memory{} = memory
-  ) do
+        %Instruction.Mem{} = instr_mem,
+        %Memory{} = memory
+      ) do
     new_value = memory.mask |> apply_mask(instr_mem.value)
     %{memory | memory: Map.put(memory.memory, instr_mem.addr, new_value)}
   end
@@ -119,7 +119,7 @@ defmodule AdventOfCode.Day14.Part1 do
   """
   @spec apply_mask(String.t(), integer) :: integer
   def apply_mask(mask, value)
-  
+
   def apply_mask(mask, value) do
     binary = Integer.digits(value, 2) |> Enum.reverse()
 

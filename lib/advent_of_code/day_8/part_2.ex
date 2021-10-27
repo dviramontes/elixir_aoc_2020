@@ -3,12 +3,12 @@ defmodule AdventOfCode.Day8.Part2 do
 
   def rewrite(program) do
     program
-    |> Enum.map(fn {k, line} ->
+    |> Enum.map(fn {_k, line} ->
       case line do
-        {"jmp", _, _} ->
+        {"jmp", _, 0} ->
           put_elem(line, 0, "nop")
 
-        {"jmp", _, 0} ->
+        {"jmp", _, _} ->
           put_elem(line, 0, "nop")
 
         {"nop", _, _} ->
